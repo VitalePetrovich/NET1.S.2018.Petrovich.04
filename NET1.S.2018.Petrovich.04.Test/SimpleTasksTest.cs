@@ -43,7 +43,7 @@ namespace NET1.S._2018.Petrovich._04.Test
             ExpectedResult = "0111111111110000000000000000000000000000000000000000000000000000")]
         [TestCase(-0.0, ExpectedResult = "1000000000000000000000000000000000000000000000000000000000000000")]
         [TestCase(0.0, ExpectedResult = "0000000000000000000000000000000000000000000000000000000000000000")]
-        public string DoubleClassExtentionToIEEE754_RightIn_RightOut(double input)
+        public string DoubleClassExtensionToIEEE754_RightIn_RightOut(double input)
             => input.ToIEEE754();
     }
 }
