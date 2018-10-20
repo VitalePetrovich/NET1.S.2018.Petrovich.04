@@ -110,6 +110,7 @@ namespace NET1.S._2018.Petrovich._04
         }
 
     }
+
     /// <summary>
     /// Extension class for type double.
     /// </summary>
@@ -140,8 +141,7 @@ namespace NET1.S._2018.Petrovich._04
                 case Double.PositiveInfinity:
                     return $"0111111111110000000000000000000000000000000000000000000000000000";
             }
-
-            int exp = 0;
+            
             string acc = string.Empty;
 
             if (inputDouble < 0.0)
@@ -154,21 +154,11 @@ namespace NET1.S._2018.Petrovich._04
                 acc += '0';
             }
 
-            double mant = inputDouble;
+            Tuple<double, int> tuple = Normalize(inputDouble);
+           
+            acc += Convert.ToString(tuple.Item2 + 1023, 2).PadRight(11, '0');
 
-            while (mant > 2.0)
-            {
-                mant /= 2.0;
-                exp++;
-            }
-
-            while (mant < 1.0)
-            {
-                mant *= 2.0;
-                exp--;
-            }
-
-            acc += Convert.ToString(exp + 1023, 2);
+            double mant = tuple.Item1;
 
             if (mant == 1.0)
             {
@@ -176,7 +166,10 @@ namespace NET1.S._2018.Petrovich._04
             }
             else
             {
-                mant -= 1.0;
+                if (mant > 1.0)
+                {
+                    mant -= 1.0;
+                }
             }
 
             int count = 0;
@@ -192,5 +185,29 @@ namespace NET1.S._2018.Petrovich._04
 
             return acc.PadRight(64, '0');
         }
+
+        private static Tuple<double, int> Normalize(double inputDouble)
+        {
+            int exp = 0;
+            while (inputDouble > 2.0)
+            {
+                inputDouble /= 2.0;
+                exp++;
+            }
+
+            while (inputDouble < 1.0)
+            {
+                inputDouble *= 2.0;
+                exp--;
+                if (exp == -1023 && inputDouble < 1.0)
+                {
+                    inputDouble /= 2.0;
+                    return new Tuple<double, int>(inputDouble, exp);
+                }
+            }
+
+            return new Tuple<double, int>(inputDouble, exp);
+        }
     }
+
 }
