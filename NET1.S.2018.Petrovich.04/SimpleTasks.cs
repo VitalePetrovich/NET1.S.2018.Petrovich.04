@@ -210,4 +210,236 @@ namespace NET1.S._2018.Petrovich._04
         }
     }
 
+    /// <summary>
+    /// Contain methods, that allow to calculate the greatest common divisor of numbers.
+    /// </summary>
+    public static class CalculationGDC
+    {
+        /// <summary>
+        /// Classic Euclidean algorithm for two numbers.
+        /// </summary>
+        /// <param name="a">
+        /// 1st number.
+        /// </param>
+        /// <param name="b">
+        /// 2nd number.
+        /// </param>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCD(int a, int b)
+        {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+
+            if (a == 0)
+            {
+                return b;
+            }
+
+            if (b == 0)
+            {
+                return a;
+            }
+
+            while (a != b)
+            {
+                if (a > b)
+                {
+                    a -= b;
+                }
+                else
+                {
+                    b -= a;
+                }
+            }
+
+            return a;
+
+            //if (b == 0)
+            //    return Math.Abs(a);
+            //return GCD(b, a % b);
+        }
+
+        /// <summary>
+        /// Classic Euclidean algorithm for three numbers.
+        /// </summary>
+        /// <param name="a">
+        /// 1st number.
+        /// </param>
+        /// <param name="b">
+        /// 2nd number.
+        /// </param>
+        /// <param name="c">
+        /// 3rd number.
+        /// </param>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCD(int a, int b, int c)
+        {
+            return GCD(GCD(a, b), c);
+        }
+
+        /// <summary>
+        /// Classic Euclidean algorithm for several numbers.
+        /// </summary>
+        /// <param name="param">
+        /// Numbers.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Throws, when entered less than two arguments.
+        /// </exception>>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCD(params int[] param)
+        {
+            if (param.Length < 2)
+            {
+                throw new ArgumentException();
+            }
+
+            if (param.Length == 2)
+            {
+                return GCD(param[0], param[1]);
+            }
+
+            int[] newParam = new int[param.Length / 2 + 1];
+
+            if (param.Length % 2 != 0)
+            {
+                newParam[param.Length / 2] = param[param.Length - 1];
+            }
+            
+            for (int i = 0; i < newParam.Length - 1; i++)
+            {
+                newParam[i] = GCD(param[2 * i], param[2 * i + 1]);
+            }
+
+            return GCD(newParam);
+        }
+
+        /// <summary>
+        /// Binary Stain algorithm for two numbers.
+        /// </summary>
+        /// <param name="a">
+        /// 1st number.
+        /// </param>
+        /// <param name="b">
+        /// 2nd number.
+        /// </param>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCDBin(int a, int b)
+        {
+            a = Math.Abs(a);
+            b = Math.Abs(b);
+
+            if (a == b)
+            {
+                return a;
+            }
+
+            if (a == 0)
+            {
+                return b;
+            }
+
+            if (b == 0)
+            {
+                return a;
+            }
+
+            if ((a & 1) == 0)
+            {
+                if ((b & 1) == 0)
+                {
+                    return GCDBin(a >> 1, b >> 1) << 1;
+                }
+                else
+                {
+                    return GCDBin(a >> 1, b);
+                }
+            }
+            else
+            {
+                if ((b & 1) == 0)
+                {
+                    return GCDBin(a, b >> 1);
+                }
+                else
+                {
+                    if (a > b)
+                    {
+                        return GCDBin((a - b) >> 1, b);
+                    }
+                    else
+                    {
+                        return GCDBin((b - a) >> 1, a);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Binary Stain algorithm for three numbers.
+        /// </summary>
+        /// <param name="a">
+        /// 1st number.
+        /// </param>
+        /// <param name="b">
+        /// 2nd number.
+        /// </param>
+        /// <param name="c">
+        /// 3rd number.
+        /// </param>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCDBin(int a, int b, int c)
+        {
+            return GCDBin(GCDBin(a, b), c);
+        }
+
+        /// <summary>
+        /// Binary Stain algorithm for several numbers.
+        /// </summary>
+        /// <param name="param">
+        /// Numbers.
+        /// </param>
+        /// <exception cref="ArgumentException">
+        /// Throws, when entered less than two arguments.
+        /// </exception>>
+        /// <returns>
+        /// The greatest common divisor.
+        /// </returns>
+        public static int GCDBin(params int[] param)
+        {
+            if (param.Length < 2)
+            {
+                throw new ArgumentException();
+            }
+
+            if (param.Length == 2)
+            {
+                return GCDBin(param[0], param[1]);
+            }
+
+            int[] newParam = new int[param.Length / 2 + 1];
+
+            if (param.Length % 2 != 0)
+            {
+                newParam[param.Length / 2] = param[param.Length - 1];
+            }
+
+            for (int i = 0; i < newParam.Length - 1; i++)
+            {
+                newParam[i] = GCDBin(param[2 * i], param[2 * i + 1]);
+            }
+
+            return GCDBin(newParam);
+        }
+    }
 }

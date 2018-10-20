@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using static NET1.S._2018.Petrovich._04.SimpleTasks;
+using static NET1.S._2018.Petrovich._04.CalculationGDC;
 
 namespace NET1.S._2018.Petrovich._04.Test
 {
@@ -45,5 +46,39 @@ namespace NET1.S._2018.Petrovich._04.Test
         [TestCase(0.0, ExpectedResult = "0000000000000000000000000000000000000000000000000000000000000000")]
         public string DoubleClassExtensionToIEEE754_RightIn_RightOut(double input)
             => input.ToIEEE754();
+
+        [TestCase(18, 3, 9, 6, ExpectedResult = 3)]
+        [TestCase(3, 15, ExpectedResult = 3)]
+        [TestCase(15, 5, 45, ExpectedResult = 5)]
+        [TestCase(-10, 35, 90, 55, -105, ExpectedResult = 5)]
+        [TestCase(1, 213124, -54654, -123124, 65765, 44444, -7, 1234567, ExpectedResult = 1)]
+        [TestCase(18, 0, ExpectedResult = 18)]
+        [TestCase(12, 21, 91, 17, 0, ExpectedResult = 1)]
+        [TestCase(3, 3, ExpectedResult = 3)]
+        [TestCase(0, 0, ExpectedResult = 0)]
+        [TestCase(-7, -7, ExpectedResult = 7)]
+        public int GDC_RightIn_RightOut(params int[] param)
+            => GCD(param);
+
+        [Test]
+        public void GCD_CallWith1Argument_ThrowsArgumentException()
+            => Assert.Throws<ArgumentException>(() => GCD(3));
+
+        [TestCase(18, 3, 9, 6, ExpectedResult = 3)]
+        [TestCase(3, 15, ExpectedResult = 3)]
+        [TestCase(15, 5, 45, ExpectedResult = 5)]
+        [TestCase(-10, 35, 90, 55, -105, ExpectedResult = 5)]
+        [TestCase(1, 213124, -54654, -123124, 65765, 44444, -7, 1234567, ExpectedResult = 1)]
+        [TestCase(18, 0, ExpectedResult = 18)]
+        [TestCase(12, 21, 91, 17, 0, ExpectedResult = 1)]
+        [TestCase(3, 3, ExpectedResult = 3)]
+        [TestCase(0, 0, ExpectedResult = 0)]
+        [TestCase(-7, -7, ExpectedResult = 7)]
+        public int GDCBin_RightIn_RightOut(params int[] param)
+            => GCDBin(param);
+
+        [Test]
+        public void GCDBin_CallWith1Argument_ThrowsArgumentException()
+            => Assert.Throws<ArgumentException>(() => GCDBin(3));
     }
 }
