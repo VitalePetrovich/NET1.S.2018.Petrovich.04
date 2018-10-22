@@ -82,7 +82,7 @@ namespace NET1.S._2018.Petrovich._04
             {
                 throw new ArgumentException($"Array {nameof(realNumbers)} does not contain elements.");
             }
-
+            
             string[] stringsArray = new string[realNumbers.Length];
 
             for (int i = 0; i < realNumbers.Length; i++)
@@ -93,26 +93,7 @@ namespace NET1.S._2018.Petrovich._04
             return stringsArray;
 
         }
-
-        private static readonly Dictionary<string, string> dict = new Dictionary<string, string>()
-        {
-            ["-"] = "minus ",
-            ["+"] = "plus ",
-            ["E"] = "exp ",
-            [","] = "point ",
-            ["."] = "point ",
-            ["0"] = "zero ",
-            ["1"] = "one ",
-            ["2"] = "two ",
-            ["3"] = "three ",
-            ["4"] = "four ",
-            ["5"] = "five ",
-            ["6"] = "six ",
-            ["7"] = "seven ",
-            ["8"] = "eight ",
-            ["9"] = "nine "
-        };
-
+        
         private static string TransformToWord(double doubleValue)
         {
             if (double.IsPositiveInfinity(doubleValue))
@@ -130,6 +111,25 @@ namespace NET1.S._2018.Petrovich._04
                 return "NaN";
             }
 
+            Dictionary<string, string> dict = new Dictionary<string, string>()
+            {
+                ["-"] = "minus ",
+                ["+"] = "plus ",
+                ["E"] = "exp ",
+                [","] = "point ",
+                ["."] = "point ",
+                ["0"] = "zero ",
+                ["1"] = "one ",
+                ["2"] = "two ",
+                ["3"] = "three ",
+                ["4"] = "four ",
+                ["5"] = "five ",
+                ["6"] = "six ",
+                ["7"] = "seven ",
+                ["8"] = "eight ",
+                ["9"] = "nine "
+            };
+
             string stringValue = doubleValue.ToString();
 
             foreach (var symbol in dict)
@@ -139,7 +139,6 @@ namespace NET1.S._2018.Petrovich._04
 
             return stringValue;
         }
-
     }
 
     /// <summary>
