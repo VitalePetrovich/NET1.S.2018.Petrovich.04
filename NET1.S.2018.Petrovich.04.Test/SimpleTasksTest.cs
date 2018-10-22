@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using static NET1.S._2018.Petrovich._04.SimpleTasks;
-using static NET1.S._2018.Petrovich._04.CalculationGDC;
+using static NET1.S._2018.Petrovich._04.CalculationGcd;
 
 namespace NET1.S._2018.Petrovich._04.Test
 {
@@ -18,6 +18,7 @@ namespace NET1.S._2018.Petrovich._04.Test
             ExpectedResult = new string[] { "eight four five point three three", "four three point zero nine" })]
         [TestCase(new double[] { -1.279d, 76542.73d, -3.31d },
             ExpectedResult = new string[] { "minus one point two seven nine", "seven six five four two point seven three", "minus three point three one" })]
+        [TestCase(new double[] { 1.76E+32 , double.NaN}, ExpectedResult = new string[] {"one point seven six exp plus three two", "NaN"})]
         public string[] TransformToWords_RightIput_RightOut(double[] realNumbers)
             => TransformToWords(realNumbers);
 
@@ -57,12 +58,12 @@ namespace NET1.S._2018.Petrovich._04.Test
         [TestCase(3, 3, ExpectedResult = 3)]
         [TestCase(0, 0, ExpectedResult = 0)]
         [TestCase(-7, -7, ExpectedResult = 7)]
-        public int GDC_RightIn_RightOut(params int[] param)
-            => GCD(param);
+        public int Gcd_RightIn_RightOut(params int[] param)
+            => Gcd(out _, param);
 
         [Test]
-        public void GCD_CallWith1Argument_ThrowsArgumentException()
-            => Assert.Throws<ArgumentException>(() => GCD(3));
+        public void Gcd_CallWith1Argument_ThrowsArgumentException()
+            => Assert.Throws<ArgumentException>(() => Gcd(out _, 3));
 
         [TestCase(18, 3, 9, 6, ExpectedResult = 3)]
         [TestCase(3, 15, ExpectedResult = 3)]
@@ -74,11 +75,11 @@ namespace NET1.S._2018.Petrovich._04.Test
         [TestCase(3, 3, ExpectedResult = 3)]
         [TestCase(0, 0, ExpectedResult = 0)]
         [TestCase(-7, -7, ExpectedResult = 7)]
-        public int GDCBin_RightIn_RightOut(params int[] param)
-            => GCDBin(param);
+        public int GcdBin_RightIn_RightOut(params int[] param)
+            => GcdBin(out _, param);
 
         [Test]
-        public void GCDBin_CallWith1Argument_ThrowsArgumentException()
-            => Assert.Throws<ArgumentException>(() => GCDBin(3));
+        public void GcdBin_CallWith1Argument_ThrowsArgumentException()
+            => Assert.Throws<ArgumentException>(() => GcdBin(out _, 3));
     }
 }
