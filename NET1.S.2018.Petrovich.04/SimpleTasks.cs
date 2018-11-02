@@ -93,8 +93,32 @@ namespace NET1.S._2018.Petrovich._04
             return stringsArray;
 
         }
+
+        public delegate string TransformDoubleToString(double number);
+
+        public static string[] TransformDoubleArray(double[] realNumbers, TransformDoubleToString transformer)
+        {
+            if (ReferenceEquals(realNumbers, null))
+            {
+                throw new ArgumentNullException(nameof(realNumbers));
+            }
+
+            if (realNumbers.Length == 0)
+            {
+                throw new ArgumentException($"{nameof(realNumbers)} doesn't contain elements.");
+            }
+
+            string[] stringsArray = new string[realNumbers.Length];
+
+            for (int i = 0; i < realNumbers.Length; i++)
+            {
+                stringsArray[i] = transformer.Invoke(realNumbers[i]).TrimEnd();
+            }
+
+            return stringsArray;
+        }
         
-        private static string TransformToWord(double doubleValue)
+        public static string TransformToWord(double doubleValue)
         {
             if (double.IsPositiveInfinity(doubleValue))
             {

@@ -12,6 +12,30 @@ namespace NET1.S._2018.Petrovich._04.Test
     [TestFixture]
     public class SimpleTasksTest
     {
+        #region delegate tests
+
+        [TestCase(new double[] { -29.0043d, 0.234d, -54.00001d },
+            ExpectedResult = new string[] { "minus two nine point zero zero four three", "zero point two three four", "minus five four point zero zero zero zero one" })]
+        [TestCase(new double[] { 845.33d, 43.09d },
+            ExpectedResult = new string[] { "eight four five point three three", "four three point zero nine" })]
+        [TestCase(new double[] { -1.279d, 76542.73d, -3.31d },
+            ExpectedResult = new string[] { "minus one point two seven nine", "seven six five four two point seven three", "minus three point three one" })]
+        [TestCase(new double[] { 1.76E+32, double.NaN }, ExpectedResult = new string[] { "one point seven six exp plus three two", "NaN" })]
+        public string[] TransformDoubleArrayByTransformingToWords_ValidIn_ValidOut(double[] realNumbers)
+            => TransformDoubleArray(realNumbers, TransformToWord);
+
+        [Test]
+        public void TransformDoubleArray_CallWithNullReference_ThrowArgumentNullException()
+            => Assert.Throws<ArgumentNullException>(() => TransformToWords(null));
+
+        [Test]
+        public void TransformDoubleArray_CallWithEmptyArray_ThrowArgumentException()
+            => Assert.Throws<ArgumentException>(() => TransformToWords(new double[0]));
+
+        #endregion
+
+        #region previous tests
+        
         [TestCase(new double[] { -29.0043d, 0.234d, -54.00001d },
             ExpectedResult = new string[] { "minus two nine point zero zero four three", "zero point two three four", "minus five four point zero zero zero zero one" })]
         [TestCase(new double[] { 845.33d, 43.09d },
@@ -81,5 +105,7 @@ namespace NET1.S._2018.Petrovich._04.Test
         [Test]
         public void GcdBin_CallWith1Argument_ThrowsArgumentException()
             => Assert.Throws<ArgumentException>(() => GcdBin(out _, 3));
+
+        #endregion
     }
 }
