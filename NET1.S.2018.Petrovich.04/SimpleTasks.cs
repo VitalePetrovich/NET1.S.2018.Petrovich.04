@@ -94,30 +94,6 @@ namespace NET1.S._2018.Petrovich._04
 
         }
 
-        //public delegate string TransformDoubleToString(double number);
-
-        //public static string[] TransformDoubleArray(double[] realNumbers, TransformDoubleToString transformer)
-        //{
-        //    if (ReferenceEquals(realNumbers, null))
-        //    {
-        //        throw new ArgumentNullException(nameof(realNumbers));
-        //    }
-
-        //    if (realNumbers.Length == 0)
-        //    {
-        //        throw new ArgumentException($"{nameof(realNumbers)} doesn't contain elements.");
-        //    }
-
-        //    string[] stringsArray = new string[realNumbers.Length];
-
-        //    for (int i = 0; i < realNumbers.Length; i++)
-        //    {
-        //        stringsArray[i] = transformer.Invoke(realNumbers[i]).TrimEnd();
-        //    }
-
-        //    return stringsArray;
-        //}
-
         /// <summary>
         /// Transform double array into string array.
         /// </summary>
@@ -151,13 +127,13 @@ namespace NET1.S._2018.Petrovich._04
 
             for (int i = 0; i < realNumbers.Length; i++)
             {
-                stringsArray[i] = transformer.Invoke(realNumbers[i]).TrimEnd();
+                stringsArray[i] = transformer(realNumbers[i]).TrimEnd();
             }
 
             return stringsArray;
         }
         
-        private static string TransformToWord(double doubleValue)
+        public static string TransformToWord(double doubleValue)
         {
             if (double.IsPositiveInfinity(doubleValue))
             {
@@ -250,234 +226,6 @@ namespace NET1.S._2018.Petrovich._04
     /// </summary>
     public static class CalculationGcd
     {
-        #region Old GCD
-        
-        ///// <summary>
-        ///// Classic Euclidean algorithm for two numbers.
-        ///// </summary>
-        ///// <param name="firstNumber">
-        ///// 1st number.
-        ///// </param>
-        ///// <param name="secondNumber">
-        ///// 2nd number.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int Gcd(int firstNumber, int secondNumber, out long elapsedMilliseconds)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    int result = GcdEuclid(firstNumber, secondNumber);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Classic Euclidean algorithm for three numbers.
-        ///// </summary>
-        ///// <param name="firstNumber">
-        ///// 1st number.
-        ///// </param>
-        ///// <param name="secondNumber">
-        ///// 2nd number.
-        ///// </param>
-        ///// <param name="thirdNumber">
-        ///// 3rd number.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int Gcd(int firstNumber, int secondNumber, int thirdNumber, out long elapsedMilliseconds)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    int result = GcdEuclid(GcdEuclid(firstNumber, secondNumber), thirdNumber);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Classic Euclidean algorithm for several numbers.
-        ///// </summary>
-        ///// <param name="param">
-        ///// Numbers.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <exception cref="ArgumentException">
-        ///// Throws, when entered less than two arguments.
-        ///// </exception>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int Gcd(out long elapsedMilliseconds, params int[] param)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    if (param.Length < 2)
-        //    {
-        //        elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //        timer.Stop();
-
-        //        throw new ArgumentException();
-        //    }
-
-        //    if (param.Length == 2)
-        //    {
-        //        timer.Stop();
-
-        //        return Gcd(param[0], param[1], out elapsedMilliseconds);
-        //    }
-
-        //    int[] newParam = new int[param.Length / 2 + 1];
-
-        //    if (param.Length % 2 != 0)
-        //    {
-        //        newParam[param.Length / 2] = param[param.Length - 1];
-        //    }
-
-        //    for (int i = 0; i < newParam.Length - 1; i++)
-        //    {
-        //        newParam[i] = GcdEuclid(param[2 * i], param[2 * i + 1]);
-        //    }
-
-        //    int result = Gcd(out _, newParam);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Binary Stain algorithm for two numbers.
-        ///// </summary>
-        ///// <param name="firstNumber">
-        ///// 1st number.
-        ///// </param>
-        ///// <param name="secondNumber">
-        ///// 2nd number.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int GcdBin(int firstNumber, int secondNumber, out long elapsedMilliseconds)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    int result = GcdStein(firstNumber, secondNumber);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Binary Stain algorithm for three numbers.
-        ///// </summary>
-        ///// <param name="firstNumber">
-        ///// 1st number.
-        ///// </param>
-        ///// <param name="secondNumber">
-        ///// 2nd number.
-        ///// </param>
-        ///// <param name="thirdNumber">
-        ///// 3rd number.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int GcdBin(int firstNumber, int secondNumber, int thirdNumber, out long elapsedMilliseconds)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    int result = GcdStein(GcdStein(firstNumber, secondNumber), thirdNumber);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        ///// <summary>
-        ///// Binary Stain algorithm for several numbers.
-        ///// </summary>
-        ///// <param name="param">
-        ///// Numbers.
-        ///// </param>
-        ///// <param name="elapsedMilliseconds">
-        ///// Method execution time.
-        ///// </param>>
-        ///// <exception cref="ArgumentException">
-        ///// Throws, when entered less than two arguments.
-        ///// </exception>>
-        ///// <returns>
-        ///// The greatest common divisor.
-        ///// </returns>
-        //public static int GcdBin(out long elapsedMilliseconds, params int[] param)
-        //{
-        //    Stopwatch timer = Stopwatch.StartNew();
-
-        //    if (param.Length < 2)
-        //    {
-        //        elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //        timer.Stop();
-
-        //        throw new ArgumentException();
-        //    }
-
-        //    if (param.Length == 2)
-        //    {
-        //        timer.Stop();
-
-        //        return GcdBin(param[0], param[1], out elapsedMilliseconds);
-        //    }
-
-        //    int[] newParam = new int[param.Length / 2 + 1];
-
-        //    if (param.Length % 2 != 0)
-        //    {
-        //        newParam[param.Length / 2] = param[param.Length - 1];
-        //    }
-
-        //    for (int i = 0; i < newParam.Length - 1; i++)
-        //    {
-        //        newParam[i] = GcdStein(param[2 * i], param[2 * i + 1]);
-        //    }
-
-        //    int result = GcdBin(out _, newParam);
-
-        //    elapsedMilliseconds = timer.ElapsedMilliseconds;
-        //    timer.Stop();
-
-        //    return result;
-        //}
-
-        #endregion
-
-        #region New GCD
-
         public delegate int CalcGcdDelegat(int x, int y);
 
         /// <summary>
@@ -766,6 +514,5 @@ namespace NET1.S._2018.Petrovich._04
             }
         }
 
-        #endregion
     }
 }
