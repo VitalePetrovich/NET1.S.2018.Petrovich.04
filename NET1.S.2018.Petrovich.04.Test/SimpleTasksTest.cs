@@ -15,6 +15,12 @@ namespace NET1.S._2018.Petrovich._04.Test
     {
         #region Filter tests
 
+        private class FilterConditionIsStrartWithLetterW : ICondition<string>
+        {
+            public bool Check(string item)
+                => item.ToUpperInvariant().StartsWith("W");
+        }
+
         [TestCase(new[] { 1, 2, 3, 4 }, ExpectedResult = new[] { 3, 4 })]
         [TestCase(new[] { 3, 4, 5, 6 }, ExpectedResult = new[] { 3, 4, 5, 6})]
         [TestCase(new[] { 1, 2, 1, 2 }, ExpectedResult = new int[] {})]
@@ -34,6 +40,17 @@ namespace NET1.S._2018.Petrovich._04.Test
             var expected = new[] { "1234", "3456" };
 
             var actual = input.Filter((a) => a.Contains("4"));
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FilterForArrayOfStringsStartWithLetterW_ValidIn_ValidOut()
+        {
+            var input = new[] { "Ball", "Car", "Word", "wrap" };
+            var expected = new[] { "Word", "wrap" };
+
+            var actual = input.Filter(new FilterConditionIsStrartWithLetterW());
 
             Assert.AreEqual(expected, actual);
         }
