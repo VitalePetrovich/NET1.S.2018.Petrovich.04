@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -9,9 +8,53 @@ using static NET1.S._2018.Petrovich._04.CalculationGcd;
 
 namespace NET1.S._2018.Petrovich._04.Test
 {
+    using System.Security.Cryptography.X509Certificates;
+
     [TestFixture]
     public class SimpleTasksTest
     {
+        #region Filter tests
+
+        [TestCase(new[] { 1, 2, 3, 4 }, ExpectedResult = new[] { 3, 4 })]
+        [TestCase(new[] { 3, 4, 5, 6 }, ExpectedResult = new[] { 3, 4, 5, 6})]
+        [TestCase(new[] { 1, 2, 1, 2 }, ExpectedResult = new int[] {})]
+        public IEnumerable<int> FilterForIntArray_ValidIn_ValidOut(IEnumerable<int> input)
+            => input.Filter((a) => a > 2);
+
+        [TestCase(new[] { 1067, 1977, 968, 1917 }, ExpectedResult = new[] { 1067, 1977, 1917 })]
+        [TestCase(new[] { 7, 0, 12345, 9865 }, ExpectedResult = new[] { 7 })]
+        [TestCase(new[] { 987, 654, 432, 78 }, ExpectedResult = new[] { 987, 78 })]
+        public IEnumerable<int> FilterIntArrayContainDigit_ValidIn_ValidOut(IEnumerable<int> input)
+            => input.Filter((a) => a.ToString().Contains(7.ToString()));
+
+        [Test]
+        public void FilterForArrayOfStrings_ValidIn_ValidOut()
+        {
+            var input = new[] { "1234", "3456", "5678" };
+            var expected = new[] { "1234", "3456" };
+
+            var actual = input.Filter((a) => a.Contains("4"));
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void FilterForLinkedListOfInt_ValidIn_ValidOut()
+        {
+            var input = new LinkedList<int>();
+            input.AddLast(1);
+            input.AddLast(2);
+            input.AddLast(3);
+            input.AddLast(4);
+            var expected = new List<int>() { 2, 3, 4 };
+
+            var actual = input.Filter((x) => x > 1);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
         #region delegate tests
 
         [TestCase(new double[] { -29.0043d, 0.234d, -54.00001d },
@@ -22,7 +65,7 @@ namespace NET1.S._2018.Petrovich._04.Test
             ExpectedResult = new string[] { "minus one point two seven nine", "seven six five four two point seven three", "minus three point three one" })]
         [TestCase(new double[] { 1.76E+32, double.NaN }, ExpectedResult = new string[] { "one point seven six exp plus three two", "NaN" })]
         public string[] TransformDoubleArrayByTransformingToWords_ValidIn_ValidOut(double[] realNumbers)
-            => TransformDoubleArray(realNumbers, TransformToWord);
+            => TransformArray(realNumbers, TransformToWord);
 
         [Test]
         public void TransformDoubleArray_CallWithNullReference_ThrowArgumentNullException()

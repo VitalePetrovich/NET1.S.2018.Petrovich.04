@@ -1,16 +1,19 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Timers;
 
 namespace NET1.S._2018.Petrovich._04
 {
+    /// <summary>
+    /// Interface which must be implemented by class-condition. 
+    /// </summary>
+    /// <typeparam name="TSource">Type of processed elements.</typeparam>
+    public interface ICondition<TSource>
+    {
+        bool Check(TSource item);
+    }
+
     /// <summary>
     /// Contain TransformToWords method.
     /// </summary>
@@ -97,7 +100,7 @@ namespace NET1.S._2018.Petrovich._04
         /// <summary>
         /// Transform double array into string array.
         /// </summary>
-        /// <param name="realNumbers">
+        /// <param name="sourceArray">
         /// Array of doubles.
         /// </param>
         /// <param name="transformer">
@@ -112,27 +115,78 @@ namespace NET1.S._2018.Petrovich._04
         /// <returns>
         /// New string array.
         /// </returns>
-        public static string[] TransformDoubleArray(double[] realNumbers, Func<double, string> transformer)
+        public static TResult[] TransformArray<TSource, TResult>(TSource[] sourceArray, Func<TSource, TResult> transformer)
         {
-            if (ReferenceEquals(realNumbers, null))
-                throw new ArgumentNullException(nameof(realNumbers));
+            if (ReferenceEquals(sourceArray, null))
+                throw new ArgumentNullException(nameof(sourceArray));
 
-            if (realNumbers.Length == 0)
-                throw new ArgumentException($"{nameof(realNumbers)} doesn't contain elements.");
+            if (sourceArray.Length == 0)
+                throw new ArgumentException($"{nameof(sourceArray)} doesn't contain elements.");
             
             if (ReferenceEquals(transformer, null))
                 throw new ArgumentNullException(nameof(transformer));
 
-            string[] stringsArray = new string[realNumbers.Length];
+            TResult[] resultsArray = new TResult[sourceArray.Length];
 
-            for (int i = 0; i < realNumbers.Length; i++)
+            for (int i = 0; i < sourceArray.Length; i++)
             {
-                stringsArray[i] = transformer(realNumbers[i]).TrimEnd();
+                resultsArray[i] = transformer(sourceArray[i]);
             }
 
-            return stringsArray;
+            return resultsArray;
         }
-        
+
+        /// <summary>
+        /// Filter for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of collection elements.</typeparam>
+        /// <param name="input">Input collection.</param>
+        /// <param name="cond">Predicate-condition.</param>
+        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
+        /// <returns>Filtered collection.</returns>
+        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, Predicate<TSource> cond)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            if (cond == null)
+                throw new ArgumentNullException(nameof(cond));
+
+            List<TSource> tempCollection = new List<TSource>();
+            
+            foreach (var item in input)
+            {
+                if (cond(item))
+                    tempCollection.Add(item);
+            }
+            
+            return tempCollection;
+        }
+
+        /// <summary>
+        /// Filter for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of collection elements.</typeparam>
+        /// <param name="input">Input collection.</param>
+        /// <param name="cond">Class-condition.</param>
+        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
+        /// <returns>Filtered collection.</returns>
+        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, ICondition<TSource> cond)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            if (cond == null)
+                throw new ArgumentNullException(nameof(cond));
+
+            return input.Filter(cond.Check);
+        }
+
+        /// <summary>
+        /// Transform double value to string representation.
+        /// </summary>
+        /// <param name="doubleValue">Value for transforming.</param>
+        /// <returns>String in which each digit of the original number is represented by the word.</returns>
         public static string TransformToWord(double doubleValue)
         {
             if (double.IsPositiveInfinity(doubleValue))
@@ -176,7 +230,7 @@ namespace NET1.S._2018.Petrovich._04
                 stringValue = stringValue.Replace(symbol.Key, symbol.Value);
             }
 
-            return stringValue;
+            return stringValue.TrimEnd();
         }
     }
 
