@@ -6,15 +6,6 @@ using System.Runtime.InteropServices;
 namespace NET1.S._2018.Petrovich._04
 {
     /// <summary>
-    /// Interface which must be implemented by class-condition. 
-    /// </summary>
-    /// <typeparam name="TSource">Type of processed elements.</typeparam>
-    public interface ICondition<TSource>
-    {
-        bool Check(TSource item);
-    }
-
-    /// <summary>
     /// Contain TransformToWords method.
     /// </summary>
     public static class SimpleTasks
@@ -51,7 +42,7 @@ namespace NET1.S._2018.Petrovich._04
 
             for (int i = 0; i < realNumbers.Length; i++)
             {
-                stringsArray[i] = TransformToWord(realNumbers[i]).TrimEnd();
+                stringsArray[i] = TransformToWord(realNumbers[i]);
             }
 
             return stringsArray;
@@ -135,53 +126,7 @@ namespace NET1.S._2018.Petrovich._04
 
             return resultsArray;
         }
-
-        /// <summary>
-        /// Filter for enumerable collections.
-        /// </summary>
-        /// <typeparam name="TSource">Type of collection elements.</typeparam>
-        /// <param name="input">Input collection.</param>
-        /// <param name="cond">Predicate-condition.</param>
-        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
-        /// <returns>Filtered collection.</returns>
-        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, Predicate<TSource> cond)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-
-            if (cond == null)
-                throw new ArgumentNullException(nameof(cond));
-
-            List<TSource> tempCollection = new List<TSource>();
-            
-            foreach (var item in input)
-            {
-                if (cond(item))
-                    tempCollection.Add(item);
-            }
-            
-            return tempCollection;
-        }
-
-        /// <summary>
-        /// Filter for enumerable collections.
-        /// </summary>
-        /// <typeparam name="TSource">Type of collection elements.</typeparam>
-        /// <param name="input">Input collection.</param>
-        /// <param name="cond">Class-condition.</param>
-        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
-        /// <returns>Filtered collection.</returns>
-        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, ICondition<TSource> cond)
-        {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
-
-            if (cond == null)
-                throw new ArgumentNullException(nameof(cond));
-
-            return input.Filter(cond.Check);
-        }
-
+        
         /// <summary>
         /// Transform double value to string representation.
         /// </summary>
@@ -568,5 +513,124 @@ namespace NET1.S._2018.Petrovich._04
             }
         }
 
+    }
+
+    public static class EnumerableExtention
+    {
+
+        /// <summary>
+        /// Interface which must be implemented by class-condition. 
+        /// </summary>
+        /// <typeparam name="TSource">Type of processed elements.</typeparam>
+        public interface ICondition<TSource>
+        {
+            bool Check(TSource item);
+        }
+
+        /// <summary>
+        /// Interface which must be implemented by class-transrotmer. 
+        /// </summary>
+        /// <typeparam name="TSource">Type of processed elements.</typeparam>
+        /// <typeparam name="TResult">Type of resulted elements.</typeparam>
+        public interface ITransformer<TSource, TResult>
+        {
+            TResult Transform(TSource source);
+        }
+
+        /// <summary>
+        /// Filter for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of collection elements.</typeparam>
+        /// <param name="input">Input collection.</param>
+        /// <param name="condition">Predicate-condition.</param>
+        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
+        /// <returns>Filtered collection.</returns>
+        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, Predicate<TSource> condition)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            if (condition == null)
+                throw new ArgumentNullException(nameof(condition));
+
+            return FilterCore(input, condition);
+
+            IEnumerable<TSource> FilterCore(IEnumerable<TSource> source, Predicate<TSource> cond)
+            {
+                foreach (var item in source)
+                {
+                    if (cond(item))
+                        yield return item;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Filter for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of collection elements.</typeparam>
+        /// <param name="input">Input collection.</param>
+        /// <param name="cond">Class-condition.</param>
+        /// <exception cref="ArgumentNullException">Throws, if input or condition is null.</exception>
+        /// <returns>Filtered collection.</returns>
+        public static IEnumerable<TSource> Filter<TSource>(this IEnumerable<TSource> input, ICondition<TSource> cond)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+
+            if (cond == null)
+                throw new ArgumentNullException(nameof(cond));
+
+            return input.Filter(cond.Check);
+        }
+
+        /// <summary>
+        /// Transformer for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of source collection elements.</typeparam>
+        /// <typeparam name="TResult">Type of resulted collection elements.</typeparam>
+        /// <param name="source">Source collection.</param>
+        /// <param name="transformer">Delegate-transformer. Provide logic of transform.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Throws, when method is call with null array or delegate-transformer reference.
+        /// </exception>
+        /// <returns>Transformed collection.</returns>
+        public static IEnumerable<TResult> Transform<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, TResult> transformer)
+        {
+            if (ReferenceEquals(source, null))
+                throw new ArgumentNullException(nameof(source));
+            
+            if (ReferenceEquals(transformer, null))
+                throw new ArgumentNullException(nameof(transformer));
+
+            return Transform(source, transformer);
+
+            IEnumerable<TResult> Transform(IEnumerable<TSource> src, Func<TSource, TResult> transf)
+            {
+                foreach (var item in src)
+                {
+                    yield return transf(item);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Transformer for enumerable collections.
+        /// </summary>
+        /// <typeparam name="TSource">Type of source collection elements.</typeparam>
+        /// <typeparam name="TResult">Type of resulted collection elements.</typeparam>
+        /// <param name="source">Source collection.</param>
+        /// <param name="transformer">Class-transformer. Provide logic of transform.</param>
+        /// <returns>Transformed collection.</returns>
+        public static IEnumerable<TResult> Transform<TSource, TResult>(this IEnumerable<TSource> source, ITransformer<TSource, TResult> transformer)
+        {
+            if (ReferenceEquals(source, null))
+                throw new ArgumentNullException(nameof(source));
+
+            if (ReferenceEquals(transformer, null))
+                throw new ArgumentNullException(nameof(transformer));
+
+            return source.Transform(transformer.Transform);
+        }
     }
 }

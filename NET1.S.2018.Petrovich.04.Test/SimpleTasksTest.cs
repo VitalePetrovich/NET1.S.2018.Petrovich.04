@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using static NET1.S._2018.Petrovich._04.SimpleTasks;
 using static NET1.S._2018.Petrovich._04.CalculationGcd;
+using static NET1.S._2018.Petrovich._04.EnumerableExtention;
 
 namespace NET1.S._2018.Petrovich._04.Test
 {
@@ -13,12 +14,18 @@ namespace NET1.S._2018.Petrovich._04.Test
     [TestFixture]
     public class SimpleTasksTest
     {
-        #region Filter tests
+        #region Filter and Transformer tests
 
         private class FilterConditionIsStrartWithLetterW : ICondition<string>
         {
             public bool Check(string item)
                 => item.ToUpperInvariant().StartsWith("W");
+        }
+
+        private class TransformerToWords : ITransformer<double, string>
+        {
+            public string Transform(double source)
+                =>TransformToWord(source);
         }
 
         [TestCase(new[] { 1, 2, 3, 4 }, ExpectedResult = new[] { 3, 4 })]
@@ -66,6 +73,17 @@ namespace NET1.S._2018.Petrovich._04.Test
             var expected = new List<int>() { 2, 3, 4 };
 
             var actual = input.Filter((x) => x > 1);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TransformEnumerableCollectionOfDoublesToWords_ValidIn_ValidOut()
+        {
+            var input = new double[] { -29.0043d, 0.234d, -54.00001d };
+            var expected = new string[] { "minus two nine point zero zero four three", "zero point two three four", "minus five four point zero zero zero zero one" };
+
+            var actual = input.Transform(new TransformerToWords());
 
             Assert.AreEqual(expected, actual);
         }
